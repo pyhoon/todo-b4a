@@ -1,0 +1,257 @@
+﻿Build1=Default,my.b4a.todo
+File1=ListItem.bal
+File2=Main.bal
+FileGroup1=Default Group
+FileGroup2=Default Group
+Group=Default Group
+Library1=core
+Library2=xui
+Library3=xcustomlistview
+Library4=ime
+Library5=appcompat
+Library6=keyvaluestore2
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/Todo")~\n~CreateResource(values, theme.xml,~\n~<resources>~\n~    <style name="Todo" parent="Theme.AppCompat.Light">~\n~        <item name="colorPrimary">#FFFFFF</item>~\n~        <item name="colorPrimaryDark">#8A2BE2</item>~\n~        <item name="colorAccent">#E91E63</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">false</item>~\n~    </style>~\n~</resources>~\n~)~\n~
+Module1=Starter
+NumberOfFiles=2
+NumberOfLibraries=6
+NumberOfModules=1
+Version=9.8
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: B4ATodo
+	#VersionCode: 1
+	#VersionName: Education
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: False
+	'#Extends: android.support.v7.app.AppCompatActivity
+#End Region
+
+Sub Process_Globals
+	
+End Sub
+
+Sub Globals
+	Dim IME As IME
+	Private CLV As CustomListView
+	Private LblEdit As Label
+	Private LblText As Label
+	Private LblCheck As Label
+	Private PnlCheck As Panel
+	Private TxtTodo As EditText
+	Private PnlItem As Panel
+	Private PnlEdit As Panel
+	Private BtnAdd As Button
+	Private LblCount As Label
+	Private LblTitleDialog As Label
+	Private LblDelete As Label
+	Dim const WHITE As Int = Colors.White
+	'Dim const LIMEGREEN As Int = Colors.ARGB(255, 173, 255, 47)
+	Dim const LIGHTGRAY As Int = Colors.ARGB(255, 240, 240, 240)
+	Dim ID As Int	
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("Main")
+	
+'	Dim List1 As List
+'	List1.Initialize
+'	Dim b As Boolean
+'	For i = 1 To 20
+'		b = Not (b)
+'		Dim map As Map = CreateMap("id": i, "chk": False, "txt": "Item #" & i)
+'		List1.Add(map)
+'	Next
+	
+	'fetch the collection
+	Dim List2 As List = Starter.kvs.Get("TodoList")
+	'Log(List2)
+	
+	If List2.IsInitialized Then
+		For Each M As Map In List2
+			'Dim i As Int = M.Get("id")
+			'Dim txt As String = M.Get("txt")
+			'Dim chk As Boolean = M.Get("chk")
+			'Log(M.Get("id") & "|" & M.Get("txt"))
+			CLV.Add(CreateListItem(M.Get("txt"), M.Get("chk"), CLV.AsView.Width, 70dip), M.Get("id"))
+		Next
+	End If
+	
+'	Wait For (Starter.kvs.GetMapAsync(Array("TodoList", "list1"))) Complete (Result As Map)
+'	Log(Result)
+
+'	Dim List As List = Result.Get("list1")
+'	For Each M As Map In List
+'		Log(M.Get("id") & "|" & M.Get("txt"))
+'	Next
+	
+'	Dim b As Boolean
+'	For i = 1 To 20
+'		b = Not (b)
+'		CLV.Add(CreateListItem($"Item #${i}"$, b, CLV.AsView.Width, 70dip), $"Item #${i}"$)
+'	Next
+
+	IME.Initialize("")
+	ID = CLV.Size
+	LblCount.Text = "Items: " & CLV.Size
+	
+'	Starter.kvs.DeleteAll
+	
+'	Starter.kvs.Remove("TodoList")
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub SaveTodo
+'	Starter.kvs.Remove("TodoList")
+	Dim List1 As List
+	List1.Initialize
+
+	For i = 0 To CLV.Size - 1
+		Dim pnl As B4XView = CLV.GetPanel(i)
+		Dim pan As B4XView = pnl.GetView(0)		' PnlItem
+		Dim chk As B4XView = pan.GetView(0)		' PnlCheck
+		Dim lbl As B4XView = chk.GetView(0)		' LblCheck
+		Dim txt As B4XView = pan.GetView(1)		' LblText
+
+		Dim map As Map = CreateMap("id": i, "chk": lbl.Visible, "txt": txt.Text)
+		List1.Add(map)
+	Next
+	Log(List1)
+	Starter.kvs.Put("TodoList", List1)
+End Sub
+
+Sub CreateListItem(Text As String, Checked As Boolean, Width As Int, Height As Int) As Panel
+	Dim p As Panel
+	p.Initialize("")
+	p.SetLayout(0, 0, Width, Height)
+	p.LoadLayout("ListItem")
+		
+	LblCheck.Visible = Checked
+	If Checked Then
+		Dim cs As CSBuilder
+		cs.Initialize
+		cs.Strikethrough.Append(Text).PopAll
+		LblText.Text = cs
+		PnlItem.Color = LIGHTGRAY ' Colors.ARGB(255, 240, 240, 240)
+		'LblCheck.Color = LIMEGREEN ' Colors.ARGB(255, 173, 255, 47)
+	Else
+		LblText.Text =  Text
+		PnlItem.Color = WHITE
+		'LblCheck.Color = WHITE
+	End If
+	Return p
+End Sub
+
+'Sub CLV_ItemClick (Index As Int, Value As Object)
+'	
+'End Sub
+
+Sub BtnAdd_Click
+	LblTitleDialog.Text = "N E W   I T E M"
+	TxtTodo.Text = ""
+	TxtTodo.RequestFocus
+	LblDelete.Visible = False
+	PnlEdit.Visible = True
+	BtnAdd.Visible = False
+End Sub
+
+Sub PnlCheck_Click
+	Dim index As Int = CLV.GetItemFromView(Sender)
+	Dim pnl As B4XView = CLV.GetPanel(index) ' ListItem
+	Dim pan As B4XView = pnl.GetView(0)		' PnlItem	
+	Dim chk As B4XView = pan.GetView(0)		' PnlCheck
+	Dim lbl As B4XView = chk.GetView(0)		' LblCheck
+	Dim txt As B4XView = pan.GetView(1)		' LblText
+		
+	lbl.Visible = Not(lbl.Visible)
+	If lbl.Visible Then
+		Dim cs As CSBuilder
+		cs.Initialize
+		cs.Strikethrough.Append(txt.Text).PopAll
+		txt.Text = cs
+		pan.Color = LIGHTGRAY ' Colors.ARGB(255, 240, 240, 240)
+		chk.Color = LIGHTGRAY ' Colors.ARGB(255, 240, 240, 240)
+		'lbl.Color = LIMEGREEN ' Colors.ARGB(255, 173, 255, 47)
+	Else
+		Dim cs As CSBuilder
+		cs.Initialize
+		cs.Append(txt.Text).PopAll
+		txt.Text = cs
+		pan.Color = WHITE
+		chk.Color = WHITE
+		'lbl.Color = WHITE
+	End If
+	ID = index
+	SaveTodo
+End Sub
+
+Sub LblEdit_Click
+	Dim index As Int = CLV.GetItemFromView(Sender)
+	Dim pnl As B4XView = CLV.GetPanel(index) ' ListItem
+	Dim pan As B4XView = pnl.GetView(0)		' PnlItem
+	Dim lbl As B4XView = pan.GetView(1)		' LblText
+	LblTitleDialog.Text = "E D I T   I T E M"
+	TxtTodo.Text = lbl.Text
+	LblDelete.Visible = True
+	PnlEdit.Visible = True
+	BtnAdd.Visible = False
+	TxtTodo.RequestFocus
+	TxtTodo.SelectionStart = TxtTodo.Text.Length
+	ID = index
+End Sub
+
+Sub LblDelete_Click
+	'MsgboxAsync("" & ID, "DELETE")
+	If ID <> CLV.Size Then
+		CLV.RemoveAt(ID)
+	End If
+	PnlEdit.Visible = False
+	BtnAdd.Visible = True
+	IME.HideKeyboard
+	'MsgboxAsync("" & ID, "DELETE")
+	LblCount.Text = "Items: " & CLV.Size
+	SaveTodo
+End Sub
+
+Sub LblYes_Click		
+	If LblTitleDialog.Text = "E D I T   I T E M" Then
+		Dim pnl As B4XView = CLV.GetPanel(ID)	' ListItem
+		Dim pan As B4XView = pnl.GetView(0)		' PnlItem
+		Dim lbl As B4XView = pan.GetView(1)		' LblText
+		If TxtTodo.Text.Trim = "" Then TxtTodo.Text = $"Item #${ID}"$
+		lbl.Text = TxtTodo.Text
+	Else
+		ID = CLV.Size + 1
+		If TxtTodo.Text.Trim = "" Then TxtTodo.Text = $"Item #${ID}"$
+		CLV.Add(CreateListItem(TxtTodo.Text, False, CLV.AsView.Width, 70dip), $"Item #${ID}"$)
+	End If
+	
+	PnlEdit.Visible = False
+	BtnAdd.Visible = True
+	IME.HideKeyboard
+	'MsgboxAsync("" & ID, "SAVE")
+	LblCount.Text = "Items: " & CLV.Size
+	SaveTodo
+End Sub
+
+Sub LblNo_Click
+	PnlEdit.Visible = False
+	BtnAdd.Visible = True
+	IME.HideKeyboard
+End Sub
+
+Sub NoScroll_Click
+	
+End Sub
