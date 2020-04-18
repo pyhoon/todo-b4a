@@ -1,4 +1,4 @@
-﻿Build1=Default,my.b4a.todo
+Build1=Default,my.b4a.todo
 File1=ListItem.bal
 File2=Main.bal
 FileGroup1=Default Group
@@ -10,10 +10,11 @@ Library3=xcustomlistview
 Library4=ime
 Library5=appcompat
 Library6=keyvaluestore2
+Library7=xui views
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/Todo")~\n~CreateResource(values, theme.xml,~\n~<resources>~\n~    <style name="Todo" parent="Theme.AppCompat.Light">~\n~        <item name="colorPrimary">#FFFFFF</item>~\n~        <item name="colorPrimaryDark">#8A2BE2</item>~\n~        <item name="colorAccent">#E91E63</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">false</item>~\n~    </style>~\n~</resources>~\n~)~\n~
 Module1=Starter
 NumberOfFiles=2
-NumberOfLibraries=6
+NumberOfLibraries=7
 NumberOfModules=1
 Version=9.8
 @EndOfDesignText@
@@ -128,7 +129,7 @@ Sub SaveTodo
 		Dim map As Map = CreateMap("id": i, "chk": lbl.Visible, "txt": txt.Text)
 		List1.Add(map)
 	Next
-	Log(List1)
+	'Log(List1)
 	Starter.kvs.Put("TodoList", List1)
 End Sub
 
@@ -225,17 +226,17 @@ Sub LblDelete_Click
 	SaveTodo
 End Sub
 
-Sub LblYes_Click		
+Sub LblYes_Click
 	If LblTitleDialog.Text = "E D I T   I T E M" Then
 		Dim pnl As B4XView = CLV.GetPanel(ID)	' ListItem
 		Dim pan As B4XView = pnl.GetView(0)		' PnlItem
 		Dim lbl As B4XView = pan.GetView(1)		' LblText
-		If TxtTodo.Text.Trim = "" Then TxtTodo.Text = $"Item #${ID}"$
+		If TxtTodo.Text.Trim = "" Then TxtTodo.Text = $"Item #${ID + 1}"$
 		lbl.Text = TxtTodo.Text
 	Else
-		ID = CLV.Size + 1
-		If TxtTodo.Text.Trim = "" Then TxtTodo.Text = $"Item #${ID}"$
-		CLV.Add(CreateListItem(TxtTodo.Text, False, CLV.AsView.Width, 70dip), $"Item #${ID}"$)
+		ID = CLV.Size
+		If TxtTodo.Text.Trim = "" Then TxtTodo.Text = $"Item #${ID + 1}"$
+		CLV.Add(CreateListItem(TxtTodo.Text, False, CLV.AsView.Width, 70dip), ID)
 	End If
 	
 	PnlEdit.Visible = False
