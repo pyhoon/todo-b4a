@@ -8,10 +8,10 @@ Library1=core
 Library2=xui
 Library3=xcustomlistview
 Library4=ime
-Library5=appcompat
-Library6=keyvaluestore2
-Library7=xui views
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/Todo")~\n~CreateResource(values, theme.xml,~\n~<resources>~\n~    <style name="Todo" parent="Theme.AppCompat.Light">~\n~        <item name="colorPrimary">#FFFFFF</item>~\n~        <item name="colorPrimaryDark">#8A2BE2</item>~\n~        <item name="colorAccent">#E91E63</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">false</item>~\n~    </style>~\n~</resources>~\n~)~\n~
+Library5=keyvaluestore2
+Library6=xui views
+Library7=appcompat
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/Todo")~\n~CreateResource(values, colors.xml,~\n~<resources>~\n~	<color name="actionbar">#FF8A2BE2</color>~\n~   	<color name="statusbar">#FF8A2BE2</color>~\n~   	<color name="navigationBar">#FF006DB3</color>	~\n~   	<color name="textColorPrimary">#FF000000</color>	~\n~   	<color name="colorAccent">#FFE91E63</color>	~\n~</resources>~\n~)~\n~~\n~~\n~CreateResource(values, theme.xml,~\n~<resources>~\n~	<style name="Todo" parent="Theme.AppCompat.Light">~\n~		<item name="colorPrimary">@color/actionbar</item>~\n~        <item name="colorPrimaryDark">@color/statusbar</item>~\n~		<item name="android:navigationBarColor">@color/navigationBar</item>		~\n~       	<item name="android:textColorPrimary">@color/textColorPrimary</item>		~\n~       	<item name="colorAccent">@color/colorAccent</item>~\n~       	<item name="windowNoTitle">true</item>~\n~       	<item name="windowActionBar">false</item>~\n~       	<item name="windowActionModeOverlay">true</item>~\n~    </style>~\n~</resources>~\n~)
 Module1=Starter
 NumberOfFiles=2
 NumberOfLibraries=7
@@ -30,7 +30,7 @@ Version=9.8
 #Region  Activity Attributes
 	#FullScreen: False
 	#IncludeTitle: False
-	'#Extends: android.support.v7.app.AppCompatActivity
+	#Extends: android.support.v7.app.AppCompatActivity
 #End Region
 
 Sub Process_Globals
@@ -60,7 +60,7 @@ End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("Main")
-		
+	
 	Wait For (Starter.kvs.GetMapAsync(Array("MapData"))) Complete (MapData As Map)
 	'Log(MapData)
 	If MapData.IsInitialized Then
@@ -103,7 +103,6 @@ Sub SaveTodo As ResumableSub
 	'Log(ListTodo)
 	Dim MapData As Map = CreateMap("MapData":ListTodo)
 	Wait For (Starter.kvs.PutMapAsync(MapData)) Complete (Success As Boolean)
-	'Log("Success: " & Success)
 	Return Success
 End Sub
 
@@ -142,8 +141,9 @@ Sub BtnAdd_Click
 End Sub
 
 Sub PnlCheck_Click
-	Dim index As Int = CLV.GetItemFromView(Sender)	
-	Dim pnl As B4XView = CLV.GetPanel(index) ' ListItem
+	Dim index As Int = CLV.GetItemFromView(Sender)
+	ID = index
+	Dim pnl As B4XView = CLV.GetPanel(ID) ' ListItem
 	Dim pan As B4XView = pnl.GetView(0)		' PnlItem
 	Dim chk As B4XView = pan.GetView(0)		' PnlCheck
 	Dim lbl As B4XView = chk.GetView(0)		' LblCheck
@@ -177,6 +177,7 @@ Sub LblEdit_Click
 	Dim pnl As B4XView = CLV.GetPanel(index) ' ListItem
 	Dim pan As B4XView = pnl.GetView(0)		' PnlItem
 	Dim lbl As B4XView = pan.GetView(1)		' LblText
+	
 	LblTitleDialog.Text = "E D I T   I T E M"
 	TxtTodo.Text = lbl.Text
 	LblDelete.Visible = True
@@ -204,16 +205,36 @@ Sub LblDelete_Click
 End Sub
 
 Sub LblYes_Click
+	Dim str As String
 	If LblTitleDialog.Text = "E D I T   I T E M" Then
 		Dim pnl As B4XView = CLV.GetPanel(ID)	' ListItem
-		Dim pan As B4XView = pnl.GetView(0)		' PnlItem
-		Dim lbl As B4XView = pan.GetView(1)		' LblText
-		If TxtTodo.Text.Trim = "" Then TxtTodo.Text = $"Item #${ID + 1}"$
-		lbl.Text = TxtTodo.Text
+		Dim pan As B4XView = pnl.GetView(0)		' PnlItem	
+		Dim chk As B4XView = pan.GetView(0)		' PnlCheck
+		Dim lbl As B4XView = chk.GetView(0)		' LblCheck
+		Dim txt As B4XView = pan.GetView(1)		' LblText
+				
+		Dim cs As CSBuilder
+		cs.Initialize
+
+		If TxtTodo.Text.Trim = "" Then
+			str = $"Item #${ID + 1}"$
+		Else
+			str = TxtTodo.Text.Trim
+		End If
+		If lbl.Visible Then
+			cs.Strikethrough.Append(str).PopAll
+		Else
+			cs.Append(str).PopAll
+		End If
+		txt.Text = cs
 	Else
 		ID = CLV.Size
-		If TxtTodo.Text.Trim = "" Then TxtTodo.Text = $"Item #${ID + 1}"$
-		CLV.Add(CreateListItem(TxtTodo.Text, False, CLV.AsView.Width, 70dip), ID)
+		If TxtTodo.Text.Trim = "" Then
+			str = $"Item #${ID + 1}"$
+		Else
+			str = TxtTodo.Text.Trim
+		End If
+		CLV.Add(CreateListItem(str, False, CLV.AsView.Width, 70dip), ID)
 	End If
 	Wait For (SaveTodo) Complete (Success As Boolean)
 	If Success Then
