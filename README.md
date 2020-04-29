@@ -3,8 +3,4 @@ A nice Todo List android app created using B4A
 
 **Preview:**
 
-![Main](https://github.com/pyhoon/todo-b4a/blob/master/Preview/1.png)
-
-![New Item](https://github.com/pyhoon/todo-b4a/blob/master/Preview/2.png)
-
-![Edit Item](https://github.com/pyhoon/todo-b4a/blob/master/Preview/3.png)
+<img src="https://github.com/pyhoon/todo-b4a/blob/master/Preview/1.png" width="140" /><img src="https://github.com/pyhoon/todo-b4a/blob/master/Preview/2.png" width="140"/><img src="https://github.com/pyhoon/todo-b4a/blob/master/Preview/3.png" width="140"/>
