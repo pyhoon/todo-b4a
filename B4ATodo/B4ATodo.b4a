@@ -106,7 +106,7 @@ Sub SaveTodo As ResumableSub
 	Return Success
 End Sub
 
-Sub CreateListItem(Text As String, Checked As Boolean, Width As Int, Height As Int) As Panel
+Sub CreateListItem(Text As String, Checked As Boolean, Width As Int, Height As Int) As B4XView
 	Dim p As B4XView = XUI.CreatePanel("")
 	p.SetLayoutAnimated(0, 0, 0, Width, Height)
 	p.LoadLayout("ListItem")
