@@ -38,23 +38,24 @@ Sub Process_Globals
 End Sub
 
 Sub Globals
-	Dim IME As IME
+	Private IME As IME
 	Private XUI As XUI
 	Private CLV As CustomListView
-	Private LblEdit As Label
-	Private LblText As Label
-	Private LblCheck As Label
-	Private PnlCheck As Panel
-	Private TxtTodo As EditText
 	Private PnlItem As Panel
 	Private PnlEdit As Panel
-	Private BtnAdd As Button
+	Private BtnAdd As Button	
 	Private LblCount As Label
 	Private LblTitleDialog As Label
 	Private LblDelete As Label
+	Private LblNo As Label
+	Private LblYes As Label
+	Private LblCheck As Label
+	Private LblText As Label
+	Private TxtTodo As EditText
+	Dim ID As Int	
 	Dim const WHITE As Int = Colors.White
-	'Dim const LIMEGREEN As Int = 0xFFADFF2F
 	Dim const LIGHTGRAY As Int = 0xFFF0F0F0
+	'Dim const LIMEGREEN As Int = 0xFFADFF2F
 	Dim ID As Int
 End Sub
 
