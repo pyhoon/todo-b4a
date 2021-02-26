@@ -35,7 +35,7 @@ CreateResource(values, colors.xml,
 <resources>
 	<color name="actionbar">#FF8A2BE2</color>
    	<color name="statusbar">#FF8A2BE2</color>
-   	<color name="navigationBar">#FF006DB3</color>	
+   	<color name="navigationBar">#FF8A2BE2</color>	
    	<color name="textColorPrimary">#FF000000</color>	
    	<color name="colorAccent">#FFE91E63</color>	
 </resources>
