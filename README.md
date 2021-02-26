@@ -64,5 +64,6 @@ In Main Activity, add #Extends: android.support.v7.app.AppCompatActivity
 	#FullScreen: False
 	#IncludeTitle: False
 	#Extends: android.support.v7.app.AppCompatActivity
+	#IgnoreWarnings: 32
 #End Region
 ```
