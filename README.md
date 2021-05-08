@@ -67,3 +67,6 @@ In Main Activity, add #Extends: android.support.v7.app.AppCompatActivity
 	#IgnoreWarnings: 32
 #End Region
 ```
+
+YouTube tutorial playlist:
+https://youtube.com/playlist?list=PLnM2IRsCeAoanBmIThXgdDQpomr59iHKv
