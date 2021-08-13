@@ -31,6 +31,7 @@ Version=9.8
 	#FullScreen: False
 	#IncludeTitle: False
 	#Extends: android.support.v7.app.AppCompatActivity
+	#IgnoreWarnings: 32
 #End Region
 
 Sub Process_Globals
